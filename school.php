@@ -1,0 +1,74 @@
+<?php
+session_start();
+require_once('funcs.php');
+loginCheck();
+?>
+
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>志望校選びアンケートV1</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-list">
+            <ul>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="homework.php">Homework</a></li>
+                <li><a href="chat.php">Chat</a></li>
+                <li><a href="school.php">School</a></li>
+                <li><a href="post.php">Survey</a></li>
+                <li><a href="scformresult.php">アンケート結果</a></li>
+            </ul>
+        </div>
+    </header>
+ 
+
+    <!-- 検索機能 -->
+    <div class="container">
+        <h1>君が行きたいと思える学校を探してみよう！</h1>
+        <br><br>
+        <button id="schoolSelect">学校を探す</button>
+    </div>
+    <br><br>
+
+    <!-- 検索結果表示 -->
+    <div>
+        <h1>学校検索結果</h1>
+        <br><br>
+        <div id="results">
+            <p>検索条件に一致した学校がここに表示されます。</p>
+            <br>
+            <table id="schoolTable" border="1" style="width: 100%; text-align: left;">
+                <thead>
+                    <tr>
+                        <th>選択</th>
+                        <th>学校名</th>
+                        <th>住所</th>
+                        <th>種別</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- データがここに動的に挿入される -->
+                </tbody>
+            </table>
+            <br>
+            <button id="showMap">選択した学校の地図を表示</button>
+        </div>
+        <div id="map" style="width: 100%; height: 500px;">
+            <!-- 地図をここに表示 -->
+        </div>
+    </div>
+
+    <!-- スクリプト -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>
