@@ -1,5 +1,4 @@
 <?php
-
 //最初にSESSIONを開始！！ココ大事！！
 session_start();
 
@@ -37,6 +36,8 @@ $val = $stmt->fetch();
 if( $val['id'] != ''){
     //Login成功時 該当レコードがあればSESSIONに値を代入
     $_SESSION['chk_ssid'] = session_id();
+    // ユーザーIDをセッションに保存
+    $_SESSION['user_id'] = $val['id']; 
     //管理者フラグによる権限設定
     $_SESSION['kanriflag'] = $val['kanriflag'];
     header('Location: index.php');
