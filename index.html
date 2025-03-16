@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>志望校選びアンケートV1</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+<header>
+    <div class="header-list">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="chat.html">Chat</a></li>
+            <li><a href="school.html">School</a></li>
+            <li><a href="post.php">Survey</a></li>
+        </ul>
+    </div>
+</header>
+
+     <div class="container">
+        <img src="./image/boy start.png" alt="explore image" />
+        <b>ジブンを変える旅に出よう！</b>
+        <p>未来を作る冒険譚<br>「Y's ME」</p>
+    </div>
+        
+    <!-- コンテンツ表示画面 -->
+
+    <div>
+        <div> 名前：<input type="text" id="uname"> </div>
+    <br>
+        <div> 誕生日：<input type="date" id="birthday"> </div>
+    <br>
+        <p>性別：</p>
+            <input id="male" type="radio" name="sex" value="male"><label for="male">男の子</label>
+            <input id="female" type="radio" name="sex" value="female"><label for="female">女の子</label>
+            <input id="none" type="radio" name="sex" value="none"><label for="none">答えたくない</label>    
+    <br><br>
+        <p>好きなこと</p>
+            <input id="sport" type="checkbox" name="favorite" value="sport"><label for="sport">スポーツ</label>
+            <input id="game" type="checkbox" name="favorite" value="game"><label for="game">ゲーム</label>
+            <input id="youtube" type="checkbox" name="favorite" value="youtube"><label for="youtube">ユーチューブ</label>
+    <br><br><br><br>
+
+        <p>Q1:どのタイプの学校が良い？</p>
+            <input id="male-school" type="radio" name="schooltype" value="male-school"><label for="male-school">男子校</label>
+            <input id="female-school" type="radio" name="schooltype" value="female-school"><label for="female-school">女子校</label>
+            <input id="both-school" type="radio" name="schooltype" value="both-school"><label for="both-school">共学</label>
+            <br>
+    <br>
+        <p>Q2:制服派？私服派？？</p>
+            <input id="uniform" type="radio" name="uniform" value="uniform"><label for="uniform">制服</label>
+            <input id="free" type="radio" name="uniform" value="free"><label for="free">私服</label>
+            <input id="nocare" type="radio" name="uniform" value="nocare"><label for="nocare">拘らない</label>
+    <br>
+    <br>
+        <p>Q3:何に力入れたい</p>
+            <input id="study" type="radio" name="choice" value="study"><label for="study">勉強</label>
+            <input id="clubactivity" type="radio" name="choice" value="clubactivity"><label for="clubactivity">部活動</label>
+            <input id="all" type="radio" name="choice" value="all"><label for="all">全て</label>
+    <br><br>
+        <p>Q4:通学時間は？</p>
+            <input id="less1hour" type="radio" name="hour" value="less1hour"><label for="less1hour">１時間以内</label>
+            <input id="1hour" type="radio" name="hour" value="1hour"><label for="1hour">1時間</label>
+            <input id="over1ohour" type="radio" name="hour" value="over1ohour"><label for="over1hour">1時間超</label>
+    <br>
+    <br>
+
+    <br>
+     <br>    
+        <div>
+            <div>冒険を始める前に未来の自分に一言！！</div>
+            <textarea id="text" cols="50" rows="2"></textarea>
+    <br><br><br>
+            <button id="send">送信</button>
+        </div>
+        <div id="output" style="overflow: auto; height: 300px;"></div>
+    </div>
+    <!--/ コンテンツ表示画面 -->
+
+
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- JQuery -->
+
+    <!--以下、Firebase貼り付け-->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import{ getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+        from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "",
+            authDomain: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: ""
+        };
+
+        // Initialize Firebase
+        //Firebaseにアクセス
+        const app = initializeApp(firebaseConfig);
+        //リアルタイムデータベースにアクセス
+        const db = getDatabase(app);
+        const dbRef = ref(db,"chat");
+
+        //送信
+        $("#send").on("click",function(){
+            const msg = {
+                uname : $("#uname").val(),
+                birthday: $("#birthday").val(),
+                sex: $("input[name='sex']:checked").val(),//選択された性別を取得
+                schooltype: $("input[name='schooltype']:checked").val(),//選択された学校タイプ
+                uniform: $("input[name='uniform']:checked").val(),//選択された制服を取得
+                choice: $("input[name='choice']:checked").val(),//選択された力を入れたいことを取得
+                hour: $("input[name='hour']:checked").val(),//選択された通勤時間を取得
+                text  : $("#text").val(),
+            }
+            //入力がちゃんとできるかConsoleLogで確認（やったら消す）
+            //console.log(msg);
+            const newPostRef = push(dbRef);//ユニークキーを生成
+            //console.log(newPostRef);//確認用
+            set(newPostRef,msg);
+
+        });
+
+        //受信
+        onChildAdded(dbRef, function(data){
+            const msg = data.val();
+            const key = data.key;
+            let h = `
+                <div>
+                    <p>${msg.uname}</p>
+                    <p>${msg.birthday}</p>
+                    <p>${msg.sex}</p>
+                    <p>${msg.schooltype}</p>
+                    <p>${msg.uniform}</p>
+                    <p>${msg.choice}</p>
+                    <p>${msg.hour}</p>
+                    <p>${msg.text}</p>
+                </div>
+            `;
+
+              // フォームをリセット//
+            $("#uname").val("");
+            $("#birthdday").val("");
+            $("#sex").val("");
+            $("#schooltype").val("");
+            $("#uniform").val("");
+            $("#choice").val("");
+            $("#hour").val("");
+            $("#text").val("");
+
+            //jQueryを使って画面に表示しましょう
+            //$("#output").append(h);
+            //この下消さない
+        })
+    </script>

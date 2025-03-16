@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <title>志望校選びアンケートV1</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-list">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="school.html">School</a></li>
+                <li><a href="post.php">Survey</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- コンテンツ表示画面 -->
+
+    <div>
+        <h1>旅の相棒と出会おう！</h1>
+        <br>
+        <p>これからの長旅には楽しいことも辛いことも起こるはず。そんな時、仲間がいると楽しいことはもっと楽しく、辛いことはみんなで分け合って、、、
+            <br>そういう仲間がいることであなたはもっとワクワクすることができるでしょう。まずは相棒と呼ぶべきメンバーを見つけましょう。
+        </p>
+        <br>
+        <div><button id="meet">相棒に会う</button></div>
+        <br>
+        <div class="partner">
+            <img src="./image/partner5.jpg" alt="partner image" />
+        </div>
+        <br><br>    
+        <div>
+            <div>相棒と会話しよう</div>
+            <br>
+            <!--コンテンツ表示画面-->
+            <div>
+                <input type="text" id="uname" placeholder="名前を入力"><br><br>
+            </div>
+                <textarea id="text" placeholder="文章を入力してください" cols="50" rows="10"></textarea>
+            <br><br><br>
+            <button id="send">送信</button>
+        </div>
+        <div id="output" style="overflow: auto; height: 300px;"></div>
+    </div>
+
+
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!--以下、Firebase貼り付け-->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+            from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBsKCodWsKvDVGsHzmQNxINOyCUTA5bKsI",
+            authDomain: "y-smev1.firebaseapp.com",
+            projectId: "y-smev1",
+            storageBucket: "y-smev1.firebasestorage.app",
+            messagingSenderId: "373121087145",
+            appId: "1:373121087145:web:6540a037526895b4069bb8"
+        };
+
+        // Initialize Firebase
+        //Firebaseにアクセス
+        const app = initializeApp(firebaseConfig);
+        //リアルタイムデータベースにアクセス
+        const db = getDatabase(app);
+        const dbRef = ref(db, "chat");
+
+        //送信
+        $("#send").on("click", function () {
+            const msg = {
+                uname: $("#uname").val(),
+                text: $("#text").val(),
+            }
+            //入力がちゃんとできるかConsoleLogで確認（やったら消す）
+            //console.log(msg);
+            const newPostRef = push(dbRef);//ユニークキーを生成
+            //console.log(newPostRef);//確認用
+            set(newPostRef, msg);
+
+        });
+
+        //受信
+        onChildAdded(dbRef, function (data) {
+            const msg = data.val();
+            const key = data.key;
+            
+            //メッセージの向き（例：名前などで判断）
+            const isSent = msg.uname === $("#uname").val();
+            const messageClass = isSent ? "sent" : "received";
+
+
+            let h = `
+                <div class="message ${messageClass}">
+                    <div class="uname">${msg.uname}</div>
+                    <div class="text">${msg.text}</div>
+                </div>
+            `;
+
+            //jQueryを使って画面に表示しましょう
+            $("#output").append(h);
+            $("#output").scrollTop($("#output")[0].scrollHeight); //自動でスクロール
+            //この下消さない
+        })
+    </script>

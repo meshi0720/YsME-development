@@ -9,8 +9,6 @@ $q3 = $_POST['q3'];
 require_once('funcs.php');
 $pdo = db_conn();
 
-
-
 //３．データ登録SQL作成
 
 // -1. SQL文を用意
