@@ -1,4 +1,6 @@
+# 機密情報
 config.php
-.env
 funcs.php
 hash.php
+.env
+

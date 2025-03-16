@@ -9,10 +9,10 @@ function h($str)
 //DB接続
 function db_conn()
 {
-    $host = '127.0.0.1'; // `localhost` ではなく `127.0.0.1` に変更
-    $dbname = 'schoolchoice_db_test';
-    $username = 'root';
-    $password = '';
+    $db_host = 'mysql3104.db.sakura.ne.jp'; // DBhost
+    $db_name = 'meshi0720_ysmedeploy';
+    $db_id = 'meshi0720_ysmedeploy';
+    $db_pw = 'Ysmedeploy0329';
     $port = '3306'; // ポートを明示的に指定
 
     try {
