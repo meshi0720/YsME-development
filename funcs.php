@@ -11,12 +11,12 @@ function db_conn()
 {
     $db_host = 'mysql3104.db.sakura.ne.jp'; // DBhost
     $db_name = 'meshi0720_ysmedeploy';
-    $db_id = 'meshi0720_ysmedeploy';
-    $db_pw = 'Ysmedeploy0329';
+    $db_user = 'meshi0720_ysmedeploy';
+    $db_password = 'Ysmedeploy0329';
     $port = '3306'; // ポートを明示的に指定
 
     try {
-        $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $username, $password);
+        $pdo = new PDO("mysql:host=$db_host;port=$db_port;dbname=$db_name;charset=utf8", $db_user, $db_password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $pdo; // 接続成功時にPDOオブジェクトを返す
     } catch (PDOException $e) {

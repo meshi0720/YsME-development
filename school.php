@@ -2,6 +2,12 @@
 session_start();
 require_once('funcs.php');
 loginCheck();
+$pdo = db_conn(); // DB接続
+
+// 学校データ取得
+$stmt = $pdo->prepare("SELECT * FROM schools");
+$stmt->execute();
+$schools = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +18,7 @@ loginCheck();
     <title>志望校選びアンケートV1</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/styles.css">
+ 
 </head>
 
 <body>
@@ -28,47 +35,68 @@ loginCheck();
             </ul>
         </div>
     </header>
- 
 
-    <!-- 検索機能 -->
     <div class="container">
         <h1>君が行きたいと思える学校を探してみよう！</h1>
         <br><br>
-        <button id="schoolSelect">学校を探す</button>
     </div>
     <br><br>
 
-    <!-- 検索結果表示 -->
     <div>
-        <h1>学校検索結果</h1>
+        <h1>通学できる範囲にある学校一覧</h1>
         <br><br>
-        <div id="results">
-            <p>検索条件に一致した学校がここに表示されます。</p>
-            <br>
-            <table id="schoolTable" border="1" style="width: 100%; text-align: left;">
-                <thead>
-                    <tr>
-                        <th>選択</th>
-                        <th>学校名</th>
-                        <th>住所</th>
-                        <th>種別</th>
+        <table id="schoolTable" border="1">
+            <thead>
+                <tr>
+                    <th>選択</th>
+                    <th>学校名</th>
+                    <th>住所</th>
+                    <th>種別</th>
+                    <th>お気に入り</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($schools as $school): ?>
+                    <tr data-id="<?= $school['id'] ?>">
+                        <td><input type="checkbox"></td>
+                        <td><?= htmlspecialchars($school['name']) ?></td>
+                        <td><?= htmlspecialchars($school['location']) ?></td>
+                        <td><?= htmlspecialchars($school['school_type']) ?></td>
+                        <td>
+                            <button class="favorite-btn" data-id="<?= $school['id'] ?>" data-fav="<?= $school['favorite'] ?>">
+                                <?= $school['favorite'] ? "★" : "☆" ?>
+                            </button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <!-- データがここに動的に挿入される -->
-                </tbody>
-            </table>
-            <br>
-            <button id="showMap">選択した学校の地図を表示</button>
-        </div>
-        <div id="map" style="width: 100%; height: 500px;">
-            <!-- 地図をここに表示 -->
-        </div>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <br>
     </div>
 
-    <!-- スクリプト -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="./app.js"></script>
+    <script>
+        document.querySelectorAll(".favorite-btn").forEach(button => {
+            button.addEventListener("click", async () => {
+                const schoolId = button.dataset.id;
+                const currentFav = button.dataset.fav === "1" ? 0 : 1;
+
+                const response = await fetch("update_favorite.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: schoolId, favorite: currentFav })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    button.innerText = currentFav ? "★" : "☆";
+                    button.dataset.fav = currentFav;
+                } else {
+                    alert("更新に失敗しました");
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

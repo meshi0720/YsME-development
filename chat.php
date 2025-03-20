@@ -124,6 +124,28 @@ $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <script>
+    $(document).ready(function() {
+        function toggleForms() {
+            var selectedOption = $('input[name="q1"]:checked').val();
+            if (selectedOption === "おはなし") {
+                $("#text, #send").show();
+                $("#upload-form, #upload-btn").hide();
+            } else if (selectedOption === "テスト作成") {
+                $("#text, #send").hide();
+                $("#upload-form, #upload-btn").show();
+            } else {
+                $("#text, #send, #upload-form, #upload-btn").hide();
+            }
+        }
+
+        // ラジオボタンの変更を監視
+        $('input[name="q1"]').change(toggleForms);
+
+        // 初期状態を設定
+        toggleForms();
+    });
+
+
     $(document).ready(function(){
         $("#send").click(function(){
             var userText = $("#text").val();

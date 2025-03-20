@@ -40,6 +40,7 @@ header {
     font-size: 70px;
     color: white;
 }
+
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -52,23 +53,10 @@ body {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 h1 {
     font-style: italic;
     font-size: 50px;
-    color:blue ;
+    color: blue;
 }
 
 .partner img {
@@ -154,4 +142,46 @@ h1 {
     font-size: 12px;
     color: #555;
     margin-bottom: 5px;
+}
+
+
+
+/* 学校一覧の表スタイル */
+#schoolTable {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 20px !important;
+}
+
+#schoolTable thead {
+    background-color: #0073e6;
+    color: white;
+    text-align: left;
+    font-weight: bold;
+}
+
+#schoolTable th,
+#schoolTable td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+#schoolTable tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#schoolTable tbody tr:hover {
+    background-color: #d1e7fd;
+}
+
+/* お気に入りボタン */
+.favorite-btn {
+    font-size: 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.favorite-btn:hover {
+    transform: scale(1.2);
 }
